@@ -7,9 +7,8 @@ a whole bunch of kids all learning to code on the same MC server all at once
  - When a player uses the /script command it executes scripts that they have written by default 
  - Add a command to unbind/ force reload scripts written by a specific player instead of the whole server
    - So that we don't interrupt someone
- - Associate console errors from EasyScript with the player that caused them / May be as simple as piping data to
- - If all goes to plan this will be used with [node-spell-server][1] 
- - 
+ - Associate console errors from EasyScript with the player that caused them
+ - If all goes to plan this will be used with [node-spell-server][1]
  
  [1]:https://github.com/jwulf/node-spell-server
 Scripting plugin for Bukkit

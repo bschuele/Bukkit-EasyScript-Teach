@@ -61,10 +61,10 @@ public class EasyScript extends JavaPlugin {
         "library.rb",
         "library.py",
         "library.groovy",
-        "scripts/test.js",
-        "scripts/test.rb",
-        "scripts/test.py",
-        "scripts/test.groovy"
+        "spells/test.js",
+        "spells/test.rb",
+        "spells/test.py",
+        "spells/test.groovy"
     };
     private static final String[] DEFAULT_LIBS = new String[] {
         "groovy-all-2.3.7.jar",
@@ -239,12 +239,12 @@ public class EasyScript extends JavaPlugin {
             this.engine = manager.getEngineByName(config.getLanguage());
 
             if (this.engine == null) {
-                getLogger().severe("Script engine named: " + config.getLanguage() + " not found, disabling plugin.");
+                getLogger().log(Level.SEVERE, "Script engine named: {0} not found, disabling plugin.", config.getLanguage());
                 getServer().getPluginManager().disablePlugin(this);
                 return;
             } else {
                 if (engine.getFactory() != null) {
-                    getLogger().info("Loaded scripting engine: " + engine.getFactory().getEngineName() + " version: " + engine.getFactory().getEngineVersion());
+                    getLogger().log(Level.INFO, "Loaded scripting engine: {0} version: {1}", new Object[]{engine.getFactory().getEngineName(), engine.getFactory().getEngineVersion()});
                     StringBuilder tmp = new StringBuilder();
                     tmp.append("Valid file extensions for your scripts are:");
                     for (String s : engine.getFactory().getExtensions()) {
@@ -285,7 +285,7 @@ public class EasyScript extends JavaPlugin {
                         try {
                             this.engine.eval(new FileReader(library));
                         } catch (ScriptException ex) {
-                            getLogger().log(Level.WARNING, "Error in library: " + library + ":" + ex.getMessage());
+                            getLogger().log(Level.WARNING, "Error in library: {0}:{1}", new Object[]{library, ex.getMessage()});
                         } catch (FileNotFoundException ex) {
                             // Should never happen.
                             getLogger().log(Level.SEVERE, null, ex);
@@ -295,7 +295,7 @@ public class EasyScript extends JavaPlugin {
                     }
                 }
                 if (!found) {
-                    getLogger().warning("Failed to find library file : " + s);
+                    getLogger().log(Level.WARNING, "Failed to find library file : {0}", s);
                 }
             }
             try {
@@ -372,7 +372,17 @@ public class EasyScript extends JavaPlugin {
      * @throws NoSuchMethodException 
      */
     public Object invokeScript(String script, Map<String,Object> params) throws ScriptException, NoSuchMethodException {
-        ScriptHolder holder = getScript(script);
+        //env.put(config.getVariableNames().get(ESVariable.BLOCK)
+        ScriptHolder holder;
+        Player pl = (Player) params.get(config.getVariableNames().get(ESVariable.PLAYER));
+        if( pl == null){
+            holder = getScript(script);
+            getLogger().log(Level.INFO, "Normal getscript.");
+        }else{
+            holder = getPlayerSpell(pl, script);
+            getLogger().log(Level.INFO, "getPlayerSpell.");
+        }
+                
         if (holder == null) {
             throw new NoSuchMethodException("Script: " + script + " not found");
         }
@@ -659,6 +669,47 @@ public class EasyScript extends JavaPlugin {
                         CompiledScript compiledScript = this.compilable.compile(new FileReader(script));
                         cached = new ScriptHolder(compiledScript, script, Long.valueOf(script.lastModified()));
                         this.scripts.put(name, cached);
+                    } catch (FileNotFoundException ex) {
+                        // Should never happen.
+                        getLogger().log(Level.SEVERE, null, ex);
+                    }
+                    break LOOP;
+                }
+            }
+        }
+        return cached;
+    }
+    
+    private ScriptHolder getPlayerSpell(Player player, String spellName) throws ScriptException
+    {
+        ScriptHolder cached = this.scripts.get(player.getName() +  "/" + spellName);
+        if (cached != null) {
+            if (config.isAutoreload()) {
+                File source = cached.getSource();
+                if ((source.isFile()) && (source.lastModified() <= cached.getLastModified().longValue())) {
+                    return cached;
+                }
+                this.scripts.remove(spellName);
+            } else {
+                return cached;
+            }
+        }
+
+        /**
+         * This is where i need to figure out how to use player name as a subdirectory
+         */
+        LOOP:
+        for (String dir : config.getScriptPath()) {
+            dir += String.format("/%s/", player.getName());
+            getLogger().log(Level.FINEST, "Using directory: {0}", dir);
+            for (String suffix : engine.getFactory().getExtensions()) {
+                File spell = new File(new File(getDataFolder(), dir), spellName + '.' + suffix);
+                if (spell.isFile()) {
+                    try {
+                        CompiledScript compiledScript = this.compilable.compile(new FileReader(spell));
+                        cached = new ScriptHolder(compiledScript, spell, Long.valueOf(spell.lastModified()));
+                        this.scripts.put(player.getName() + "/" + spellName, cached);
+                        
                     } catch (FileNotFoundException ex) {
                         // Should never happen.
                         getLogger().log(Level.SEVERE, null, ex);

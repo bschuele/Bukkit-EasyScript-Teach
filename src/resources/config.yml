@@ -28,4 +28,4 @@ systemProperties:
 libraries:
   - library
 scriptPath:
-  - scripts
+  - spells

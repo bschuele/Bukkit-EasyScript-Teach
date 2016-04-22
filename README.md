@@ -1,5 +1,7 @@
 # Bukkit-EasyScript-Teach
 
+
+
 This is a fork of easyscript with some modifications to make it more suited to
 a whole bunch of kids all learning to code on the same MC server all at once
 
@@ -10,5 +12,8 @@ a whole bunch of kids all learning to code on the same MC server all at once
  - Associate console errors from EasyScript with the player that caused them
  - If all goes to plan this will be used with [node-spell-server][1]
  
+## Build Status
+
+![Build Passing](https://travis-ci.org/kylelt/Bukkit-EasyScript-Teach.svg)
+
  [1]:https://github.com/jwulf/node-spell-server
-Scripting plugin for Bukkit

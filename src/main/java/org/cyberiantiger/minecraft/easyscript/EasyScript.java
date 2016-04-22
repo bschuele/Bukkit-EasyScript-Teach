@@ -672,7 +672,7 @@ public class EasyScript extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if ("script".equals(command.getName())) {
+        if ("spell".equals(command.getName())) {
             if (args.length < 1) {
                 return false;
             }

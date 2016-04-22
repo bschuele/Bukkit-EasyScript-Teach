@@ -86,10 +86,6 @@
   </build>
   <repositories>
     <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/content/groups/public/</url>
-    </repository>
-    <repository>
       <id>cyberiantiger.repo</id>
       <url>http://cyberiantiger.org/maven/</url>
     </repository>
@@ -97,25 +93,16 @@
       <id>spigotmc-public</id>
       <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
     </repository>
+    <repository>
+        <id>destroystokyo.repo</id>
+        <url>https://repo.destroystokyo.com/content/repositories/snapshots/</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>craftbukkit</artifactId>
-      <version>1.8.3-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
+        <groupId>com.destroystokyo.paper</groupId>
+        <artifactId>paper-api</artifactId>
+        <version>1.9-R0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
-  <distributionManagement>
-    <repository>
-      <id>cyberiantiger.repo</id>
-      <name>CyberianTiger Maven Repository</name>
-      <url>dav:http://cyberiantiger.org/maven</url>
-    </repository>
-    <snapshotRepository>
-      <id>cyberiantiger.repo</id>
-      <name>CyberianTiger Maven Repository</name>
-      <url>dav:http://cyberiantiger.org/maven</url>
-    </snapshotRepository>
-  </distributionManagement>
 </project>

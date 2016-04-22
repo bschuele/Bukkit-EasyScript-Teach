@@ -1,2 +1,9 @@
 ## YAML Template.
 language: java
+deploy:
+  provider: releases
+  api_key: "RdK1E2jZiqGRkJv7vUph"
+  file: "easyscript-teach-1.0-SNAPSHOT"
+  skip_cleanup: true
+  on:
+    tags: true

@@ -3,8 +3,12 @@ version: "${version}-${project.build.number}"
 main: "org.cyberiantiger.minecraft.easyscript.EasyScript"
 website: "http://dev.bukkit.org/server-mods/easyscript/"
 commands:
+  cast:
+      description: cast a spell
+      usage: /cast <name> <args>
+      permission: easyscript.script
   spell:
-    description: Execute a script
+    description: cast a spell
     usage: /spell <name> <args>
     permission: easyscript.script
   scriptreload:
